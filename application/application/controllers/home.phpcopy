@@ -1,0 +1,332 @@
+<?php
+
+class Home extends CI_Controller
+{
+	
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('onlineapplication_model');
+		$this->load->helper('form');
+		$this->load->helper('url');
+		$this->load->helper('date');
+		$this->load->library('email');	
+		
+		$this->data = array(
+            'title' => 'Welcome'
+			);
+		$this->js = array(
+            'jsfile' => 'application.js'
+			);
+			
+		$status = $this->onlineapplication_model->onlineapplicationstatus();
+		if($status['settings_value']=="INACTIVE"){
+			header("Location: https://stufaps.chedro1.com/stufaps-application-closed/");
+		}
+			
+
+	}
+	
+	public function index()
+	{
+
+		$data = $this->data;
+		$js = $this->js;
+		$this->load->view('inc_boxed/header_view');
+		$this->load->view('inc_boxed/lefttopsidebar_view');
+		$this->load->view('inc_boxed/subheader_view');
+
+		$data['hei_list'] = $this->onlineapplication_model->gethei();
+		$data['course_list'] = $this->onlineapplication_model->getcourse();
+		//$data['courses_list'] = $this->scholarshipapplicants_model->getcourses();
+		//$data['user_count'] = $this->scholarshipapplicants_model->getusercount();
+		//$data['yearapplied_list'] = $this->scholarshipapplicants_model->getyearapplied();
+		$data['city_municipality_present'] = $this->onlineapplication_model->city_municipality_present();
+		$data['city_municipality'] = $this->onlineapplication_model->city_municipality();
+		//$data['congressionaldistrict'] = $this->scholarshipapplicants_model->congressionaldistrict();
+
+		$this->load->view('scholarshipapplication/homeboxed_view',$data);
+		$this->load->view('inc_boxed/footer_view',$js);
+		
+	}
+	
+	public function verify()
+	{
+
+			$secret_key = "6LfvgcgUAAAAAM5A1CurBjkR-WSGM17veynXB4yd";
+			$captcha = $this->input->post('g-recaptcha-response');
+			$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secret_key."&response=".$captcha);
+			
+			echo $response;
+		
+	}
+	
+	
+	
+	public function submitform(){
+		if ($this->input->server('REQUEST_METHOD') == 'POST'){
+			
+			
+			$complete_mobile = $this->input->post('mobile_prefix').$this->input->post('mobile_number');
+			
+			
+			$formsubmitted =array(
+		'lname'=>$this->input->post('lname'),
+		'extension'=>$this->input->post('extension'),
+		'fname'=>$this->input->post('fname'),
+		'mname'=>$this->input->post('mname'),
+		'birth-month'=>$this->input->post('birth-month'),
+		'birth-day'=>$this->input->post('birth-day'),
+		'birth-year'=>$this->input->post('birth-year'),
+		'placeofbirth'=>$this->input->post('placeofbirth'),
+		'gender'=>$this->input->post('gender'),
+		'civil_status'=>$this->input->post('civil_status'),
+		'citizenship'=>$this->input->post('citizenship'),
+		'mobile_number'=>$complete_mobile,
+		'email'=>$this->input->post('email'),
+		'pr_barangay'=>$this->input->post('pr_barangay'),
+		'pr_towncity'=>$this->input->post('pr_towncityname'),
+		'pr_province'=>$this->input->post('pr_province'),
+		'pr_zip_code'=>$this->input->post('pr_zip_code'),
+		'barangay'=>$this->input->post('barangay'),
+		'towncity'=>$this->input->post('towncity'),
+		'province'=>$this->input->post('province'),
+		'zipcode'=>$this->input->post('zipcode'),
+		'hsgraduated'=>$this->input->post('hsgraduated'),
+		'hsgraduated_address'=>$this->input->post('hsgraduated_address'),
+		'hsgraduated_sector'=>$this->input->post('hsgraduated_sector'),
+		'year_level'=>$this->input->post('year_level'),
+		'disability'=>$this->input->post('disability'),
+		'ip_affiliation'=>$this->input->post('ip_affiliation'),
+		'fstatus'=>$this->input->post('fstatus'),
+		'father'=>$this->input->post('father'),
+		'father_m'=>$this->input->post('father_m'),
+		'father_l'=>$this->input->post('father_l'),
+		'f_address'=>$this->input->post('f_address'),
+		'f_contactno'=>$this->input->post('f_contactno'),
+		'foccupation'=>$this->input->post('foccupation'),
+		'f_employer'=>$this->input->post('f_employer'),
+		'f_employer_address'=>$this->input->post('f_employer_address'),
+		'f_highesteduc'=>$this->input->post('f_highesteduc'),
+		'mstatus'=>$this->input->post('mstatus'),
+		'mother'=>$this->input->post('mother'),
+		'mother_m'=>$this->input->post('mother_m'),
+		'mother_l'=>$this->input->post('mother_l'),
+		'm_address'=>$this->input->post('m_address'),
+		'm_contactno'=>$this->input->post('m_contactno'),
+		'moccupation'=>$this->input->post('moccupation'),
+		'm_employer'=>$this->input->post('m_employer'),
+		'm_employer_address'=>$this->input->post('m_employer_address'),
+		'm_highesteduc'=>$this->input->post('m_highesteduc'),
+		'income'=>$this->input->post('income'),
+		'siblingno'=>$this->input->post('siblingno'),
+		'dswd4p'=>$this->input->post('dswd4p'),
+		'hei'=>$this->input->post('hei'),
+		'hei_address'=>$this->input->post('hei_address'),
+		'hei_type'=>$this->input->post('hei_type'),
+		'course'=>$this->input->post('course'),
+		'yearapplied'=>$this->input->post('2020'),
+		'preferred_mailing'=>$this->input->post('preferred_mailing'),
+		'other_assistance'=>$this->input->post('other_assistance'),
+		'othertype1'=>$this->input->post('othertype1'),
+		'othertype1_name'=>$this->input->post('othertype1_name'),
+		'othertype2'=>$this->input->post('othertype2'),
+		'othertype2_name'=>$this->input->post('othertype2_name'),
+		'towncityname'=>$this->input->post('towncityname'),
+		'guard_fname'=>$this->input->post('guard_fname'),
+		'guard_mname'=>$this->input->post('guard_mname'),
+		'guard_lname'=>$this->input->post('guard_lname'),
+		'guard_address'=>$this->input->post('guard_address'),
+		'guard_contact'=>$this->input->post('guard_contact'),
+		'guard_occupation'=>$this->input->post('guard_occupation'),
+		'guard_employer'=>$this->input->post('guard_employer'),
+		'guard_empaddress'=>$this->input->post('guard_empaddress'),
+		'guard_highesteduc'=>$this->input->post('guard_highesteduc'),
+		'congressionaldistrict'=>$this->input->post('congressionaldistrict')
+	
+		);
+		//print_r($formsubmitted);
+		
+		//$this->onlineapplication_model->saveapplication($formsubmitted);
+		
+		$result = $this->onlineapplication_model->saveapplication($formsubmitted);
+		//$result="123";
+		//$clean_result = trim($result);
+		echo json_encode($result);
+		
+		$last_applicant_id = $result;
+		$contactno = $complete_mobile;
+		$this->send_sms_bulk($contactno,$last_applicant_id);
+		$this->sendemailnotification($formsubmitted,$last_applicant_id);
+		
+		
+		}//end if condition
+		
+	}
+	
+	public function send_sms_bulk($contactno,$last_applicant_id){
+			
+			$this->load->helper('url');
+			$sms_from = "CHEDRO1";
+			//$sms_to = "09468147457";
+			//$contactno = "639468147457";
+			//$last_applicant_id = "123";
+			$now = new DateTime();
+			$now->setTimezone(new DateTimezone('Asia/Manila'));
+			$now_timestamp = $now->format('Y, M-d h:i:a');
+			//echo $now_timestamp;
+			//$datestring = 'Year: %Y, %M %d %h:%i %a';
+			//$time = time();
+			//$nowdate = mdate($datestring, $time);
+			$user = "ecasem";
+			$pass = "passw0rd";
+			//$sms_msg = "This is to acknowledge your scholarship application with ID #:".$last_applicant_id.". Your application will be evaluated and will inform you if you are granted.";
+			$sms_msg = "This is to acknowledge your scholarship application # ".$last_applicant_id.". Please submit documentary requirements to CHEDRO1 for validation. No need to reply to this text.";
+			 $query_string = "?un=".$user."&pwd=".$pass;
+			$query_string .= "&dstno=".rawurlencode($contactno);
+			 $query_string .= "&msg=".rawurlencode(stripslashes($sms_msg)) . "&type=1&sendid=".$sms_from;        
+			$url = "https://www.isms.com.my/isms_send.php".$query_string;
+			
+			//redirect($url);
+			file_get_contents($url);
+			//echo $url;
+			
+	}
+	
+	
+	
+	public function applicant_checkduplicate()
+	{
+		
+		if ($this->input->server('REQUEST_METHOD') == 'POST'){
+		$formsubmitted =array(
+		'lname'=>$this->input->post('lname'),
+		'extension'=>$this->input->post('extension'),
+		'fname'=>$this->input->post('fname'),
+		'mname'=>$this->input->post('mname'),
+		'birth-month'=>$this->input->post('birth-month'),
+		'birth-day'=>$this->input->post('birth-day'),
+		'birth-year'=>$this->input->post('birth-year')
+		);
+		
+		
+		$result = $this->onlineapplication_model->applicant_checkduplicate($formsubmitted);
+		//$result="123";
+		echo json_encode($result);
+		
+		
+		}//end if condition
+		
+	}
+	
+	
+	public function checkduplicate()
+	{
+		
+		if ($this->input->server('REQUEST_METHOD') == 'POST'){
+		$congid = $this->input->post('congid');
+		
+		$congid_result = $this->onlineapplication_model->congid($congid);
+		echo json_encode($congid_result);
+		}else{
+			header("Location: https://stufaps.chedro1.com/application");
+		}
+		
+	}
+	
+	public function getcong()
+	{
+		
+		if ($this->input->server('REQUEST_METHOD') == 'POST'){
+		$congid = $this->input->post('congid');
+		
+		$congid_result = $this->onlineapplication_model->congid($congid);
+		echo json_encode($congid_result);
+		}else{
+			header("Location: https://stufaps.chedro1.com/application");
+		}
+		
+	}
+	
+	public function gettowncity()
+	{
+		
+		if ($this->input->server('REQUEST_METHOD') == 'POST'){
+		$zid = $this->input->post('zid');
+		
+		$congid_result = $this->onlineapplication_model->zid($zid);
+		echo json_encode($congid_result);
+		}else{
+			header("Location: https://stufaps.chedro1.com/application");
+		}
+	}
+	
+	public function getheidetails()
+	{
+		if ($this->input->server('REQUEST_METHOD') == 'POST'){
+			$heicode = $this->input->post('heicode');
+			//$heicode = "03085c";
+			$congid_result = $this->onlineapplication_model->gethei2($heicode);
+			//echo ($congid_result);
+			echo json_encode($congid_result);
+		}else{
+			header("Location: https://stufaps.chedro1.com/application");
+		}
+
+		
+		
+	}
+	
+	public function sendemailnotification($formsubmitted,$applicantid){
+		$subject = 'StuFAPs New Application from '.$formsubmitted['fname'];
+		$from = 'support@chedro1.com';
+		$emailContent = 'New Application from '.$formsubmitted['fname'].' '.$formsubmitted['mname'].' '.$formsubmitted['lname'];
+		$emailContent.= '<br><br>Applicant ID: '.$applicantid;
+		$emailContent .= '<br><br>Mobile: '.$formsubmitted['mobile_number'];
+		$emailContent .= '<br><br>Address: '.$formsubmitted['barangay'].' '.$formsubmitted['towncity'].' '.$formsubmitted['province'];
+		$emailContent .= '<br><br>Previous School: '.$formsubmitted['hsgraduated'].' '.$formsubmitted['hsgraduated_address'];
+		$emailContent .= '<br><br>Other Information:' .$formsubmitted['course'];
+
+		$config['protocol'] = 'smtp';
+		$config['smtp_host'] = 'ssl://mail.softbytes.asia';
+		$config['smtp_port'] = '465';
+		$config['smtp_timeout'] = '60';
+
+		$config['smtp_user'] = 'elvin@softbytes.asia';
+		$config['smtp_pass'] = 'evenlytenwebsolutions';
+
+		$config['charset'] = 'utf-8';
+		$config['newline'] = "\r\n";
+		$config['mailtype'] = 'html';
+		$config['validation'] = 'TRUE';
+
+		$this->email->initialize($config);
+		$this->email->set_mailtype("html");
+		$this->email->from($from,'StuFAPs Application');
+		$this->email->to('ecasem@ched.gov.ph');
+		$this->email->subject($subject);
+		$this->email->message($emailContent);
+		
+		if($this->email->send()){
+			//echo json_encode(['res'=>'success']);
+		}else{
+			//echo json_encode(['res'=>$this->email->print_debugger()]);
+		}
+
+	}
+	
+	public function sampleemail(){
+		
+		$applicationid="52190";
+		$mobileno="639304412577";
+		$formsubmitted =$this->onlineapplication_model->onlinedetails($applicationid,$mobileno);
+		//$last_applicant_id = "1234";
+		
+		$this->sendemailnotification($formsubmitted,$last_applicant_id);
+		
+		
+	}
+	
+	
+	
+}

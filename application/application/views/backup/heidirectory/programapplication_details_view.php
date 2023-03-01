@@ -1,0 +1,451 @@
+
+<div id="page-container" class="header-fixed-top sidebar-visible-lg-full">
+	
+	
+	<!--rightsidebar here-->
+	<?php //$this->load->view('rightsidebar_view'); ?>
+	
+	<!--main sidebar here -->
+	<?php $this->load->view('leftsidebar_view'); ?>
+
+	<!-- Main Container -->
+	<div id="main-container">
+		  <?php $this->load->view('subheader_view'); ?>
+
+		<!-- Page content -->
+		<div id="page-content">
+			<?php $this->load->view('heidirectory/subnav_view'); ?>
+
+			
+			 <!-- Tickets Content -->
+                        <div class="row">
+                            <div class="col-md-4 col-lg-3">
+                                <!-- Menu Block -->
+                                <div class="block full">
+                                    <!-- Menu Title -->
+                                    <div class="block-title clearfix">
+                                        <div class="block-options pull-right">
+                                            <a href="javascript:void(0)" class="btn btn-effect-ripple btn-default" data-toggle="tooltip" title="Settings"><i class="fa fa-cog"></i></a>
+                                        </div>
+                                        <h2>Filters</h2>
+                                    </div>
+                                    <!-- END Menu Title -->
+
+                                    <!-- Menu Content -->
+                                    <ul class="nav nav-pills nav-stacked">
+                                       
+										<li class="<?php echo $clean_status;?>">
+                                            <a href="<?=base_url()?>programapplication">
+                                                <span class="badge pull-right"><?php echo $totalrecords;?></span>
+                                                <i class="fa fa-fw fa-ticket icon-push"></i> <strong>All</strong>
+                                            </a>
+                                        </li>
+										<?php
+										
+										foreach($filter_list as $filters):
+											if($filters['status']==$clean_status){
+												$selected_class = "active";
+											}else{
+												$selected_class = "";
+											}
+											echo "<li class=".$selected_class.">";
+                                            echo "<a href='".base_url()."programapplication/filter/".$filters['status']."'>";
+                                            echo "   <span class='badge pull-right'>".$filters['noapp']."</span>";
+                                            echo "   <i class='fa fa fa-file-text-o icon-push'></i> <strong>".$filters['status']."</strong>";
+                                            echo "</a>";
+											echo "</li>";
+										
+										endforeach;
+										
+										?>
+                                    </ul>
+                                    <!-- END Menu Content -->
+                                </div>
+                                <!-- END Menu Block -->
+
+                                
+                            </div>
+                            <div class="col-md-8 col-lg-9">
+                                <!-- Tickets Block -->
+                                <div class="block">
+                                    <!-- Tickets Title -->
+                                    <div class="block-title">
+                                        <div class="block-options pull-right">
+                                            <a href="javascript:void(0)" class="btn btn-effect-ripple btn-default" data-toggle="tooltip" title="Settings"><i class="fa fa-cog"></i></a>
+                                        </div>
+                                        <ul class="nav nav-tabs" data-toggle="tabs">
+                                            <!-- <li><a href="#tickets-list">Ticket List</a></li> -->
+                                            <li class="active"><a href="#tickets-single">Application ID #:<?php echo $progappid;?></a></li>
+                                        </ul>
+                                    </div>
+                                    <!-- END Tickets Title -->
+
+                                    <!-- Tabs Content -->
+                                    <div class="tab-content">
+                                        <!-- Tickets List -->
+                                        <div class="tab-pane" id="tickets-list">
+                                            <div class="block-content-full">
+                                                <div class="table-responsive remove-margin-bottom">
+                                                     <table id="example-datatable" class="table table-striped table-bordered table-vcenter table-hover">
+                                                        <thead>
+                    <tr>
+                        
+						<th>HEI</th>
+                        <th>Program Name/Application</th>
+						<th>Year Level</th>
+						<th >Date Received</th>
+						<th>Assigned To</th>
+						<th>Status</th>
+						<th></th>
+                    </tr>
+                </thead>
+                                                      <tbody>
+				
+				<?php
+				
+				foreach ($program_application_list as $application_list):
+				$instcode = strtoupper($application_list['instcode']);
+				echo "<tr>";
+				
+				echo "<td><a href='heidirectory/institution/$instcode'>".$application_list['instname']."</a></td>";
+				echo "<td><strong><a href='programapplication/details/".$application_list['progappid']."'>".$application_list['programname']."</a></strong></td>";
+				echo "<td>".$application_list['yearlevel']."</td>";
+				echo "<td>".$application_list['datereceived']."</td>";
+				echo "<td>".$application_list['name']."</td>";
+				echo "<td>".$application_list['status']."</td>";
+				
+				echo "<td><button  onclick='deleteapplication(".$application_list['progappid'].");' type='reset' class='btn btn-effect-ripple btn-danger'><i class='fa fa-times'></i></button></td></tr>";
+				
+				endforeach;
+				?>
+				
+				
+				
+				
+                    
+                </tbody>
+		</table>
+                                                </div>
+                                                <div class="text-center">
+                                                   <div class="row">&nbsp;</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- END Tickets List -->
+
+                                        <!-- Ticket View -->
+                                        <div class="tab-pane active" id="tickets-single">
+										<input type="hidden" id="progappid" value="<?php echo $progappid;?>">
+                                            <div class="alert alert-success animation-fadeInQuick">Current Status: <strong><?php echo $application_details['status'];?></strong></div>
+					  <div class="row">
+					  
+					  <label class="col-md-1 control-label text-right" for="example-select2">Program Name / Application</label>
+									<div class="col-md-3">
+										<textarea class="form-control" id="programname"  ><?php echo $application_details['programname']?></textarea>
+									</div>
+									
+					  
+									<label class="col-md-1 control-label text-right" for="example-select2">HEI</label>
+									<div class="col-md-5">
+										<select id="instcode" name="example-select2" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
+											
+									<?php
+									
+									echo "<option value='".$application_details['instcode']."'>".$application_details['instname']."</option>";
+									
+									foreach ($hei_list as $heis):
+									$heiname = strtoupper($heis['instname']);
+									
+									echo "<option value='".$heis['instcode']."'>$heiname</option>";
+									
+									endforeach;
+									?>
+																
+											
+										</select>
+									</div>
+									<div class="row"></div>
+									<label class="col-md-1 control-label text-right" for="example-select2">Date Received</label>
+									<div class="col-md-3">
+										<input type="text" id="datereceived" name="example-datepicker3" class="form-control input-datepicker" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" value="<?php echo $application_details['datereceived']?>" <?php echo $received_class;?>>
+									</div>
+									
+									
+									<label class="col-md-1 control-label text-right" for="example-select2">Year Level</label>
+									<div class="col-md-2">
+										<select id="yearlevel" class="form-control">
+										<?php
+										echo "<option value='".$application_details['yearlevel']."'>".$application_details['yearlevel']."</option>";
+										?>
+												
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+												<option value="4">4</option>
+												<option value="5">5</option>
+												</select>
+									</div>
+									
+									<label class="col-md-1 control-label text-right" for="example-select2">School Year</label>
+									<div class="col-md-2">
+										<select id="schoolyear" class="form-control">
+										<?php
+										echo "<option value='".$application_details['schoolyear']."'>".$application_details['schoolyear']."</option>";
+										?>
+												
+												<option value="2016-2017">2016-2017</option>
+												<option value="2017-2018">2017-2018</option>
+												<option value="2018-2019">2018-2019</option>
+												<option value="2019-2020">2019-2020</option>
+												
+												</select>
+									</div>
+									<div class="row"></div>
+									
+									<label class="col-md-1 control-label text-right" for="example-select2">Assigned To</label>
+									<div class="col-md-3">
+										<select id="assigned_to_uid" name="example-select2" class="select-select2" style="width: 100%;" data-placeholder="Choose one.." <?php echo $assigned_class;?>>
+                                                    
+													<?php
+													
+													echo "<option value='".$application_details['assigned_to_uid']."'>".$application_details['name']."</option>";
+													
+													
+													foreach ($employee_list as $technical):
+													
+													
+													echo "<option value='".$technical['uid']."'>".$technical['name']."</option>";
+													
+													endforeach;
+													?>
+													
+													
+                                                </select>
+									</div>
+									
+									<label class="col-md-1 control-label text-right" for="example-select2">Status</label>
+									<div class="col-md-3">
+										<select id="application_status" class="form-control">
+												<?php
+												
+												echo "<option value='".$application_details['status']."'>".$application_details['status']."</option>";
+													
+													
+												?>
+												<option value="Received">Received</option>
+												<option value="For Processing">For Processing</option>
+												<option value="Acknowledge">Acknowledge</option>
+												<option value="GPR Application Checklist Prepared">GPR Application Checklist Prepared</option>
+												<option value="Letter of Deficiency">Letter of Deficiency</option>
+												<option value="For RQAT Visit">For RQAT Visit</option>
+												<option value="Visited by RQAT">Visited by RQAT</option>
+												<option value="Awaiting Compliance">Awaiting Compliance</option>
+												<option value="Issued Permit or Recognition">Issued Permit or Recognition</option>
+												<option value="Defered or Withdrawn">Defered or Withdrawn</option>
+												<option value="Forwarded to Central Office">Forwarded to Central Office</option>
+												<option value="Denied">Denied</option>
+												</select>
+									</div>
+									
+									<label class="col-md-1 control-label text-right" for="example-select2">
+									<button type="button" class="btn btn-effect-ripple btn-primary" onclick="updateapplication();">Update</button>
+									
+									</label>
+									
+									
+									
+									
+					</div> <!-- end application details-->
+											
+										<div class="row"></div>	
+										
+                                            <hr>
+                                            <ul class="media-list media-feed push" id="remarks_list">
+						
+									<?php
+									
+									foreach($remarks_list as $remarks):
+									
+										
+										echo "<li class='media'>";
+										echo "<a href='page_ready_user_profile.html' class='pull-left'>";
+										echo "<img src='".base_url()."public/img/placeholders/avatars/avatar9.jpg' alt='Avatar' class='img-circle'>";
+										echo "</a>";
+										echo "<div class='media-body'>";
+											echo "<p class='push-bit'>";
+												echo "<span class='text-muted pull-right'>";
+												echo "<small><button  onclick='deleteremarks(".$remarks['remarksid'].");' type='reset' class='btn btn-xs btn-effect-ripple btn-danger'><i class='fa fa-times'></i></button></small>";
+												echo "</span>";
+												echo "<small><a href='#'>".$remarks['name']."</a></small><br>";
+												echo "<small>".mdate('%F %d, %Y %h:%m',strtotime($remarks['remarkstime']))."</a>";
+											echo "</p>";
+											echo "<p>".$remarks['remarks']."</p>";
+											
+										echo "</div>";
+										echo "</li>";
+									
+									
+									endforeach;
+									
+									
+									?>
+                                                <!-- Replies -->
+                                                
+                                                
+                                                <li class="media">
+                                                    <a href="page_ready_user_profile.html" class="pull-left">
+                                                        <img src="<?=base_url()?>public/img/placeholders/avatars/avatar.jpg" alt="Avatar" class="img-circle">
+                                                    </a>
+                                                    <div class="media-body">
+                                                        
+                                                            <textarea id="remarks_reply" name="remarks_reply" class="form-control" rows="5" placeholder="Enter your remarks"></textarea>
+                                                            <button type="submit" class="btn btn-sm btn-primary" onclick="saveremarks(<?php echo $progappid;?>);"><i class="fa fa-reply"></i> Save Remarks</button>
+                                                       
+                                                    </div>
+                                                </li>
+                                                <!-- END Replies -->
+                                            </ul>
+                                        </div>
+                                        <!-- END Ticket View -->
+                                    </div>
+                                    <!-- END Tabs Content -->
+                                </div>
+                                <!-- END Tickets Block -->
+                            </div>
+                        </div>
+                        <!-- END Tickets Content -->
+						
+	<!-- Regular Modal -->
+			<div id="modal-regular" class="modal" role="dialog" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h3 class="modal-title"><strong>Add Application Details</strong></h3>
+						</div>
+						<div class="modal-body">
+							
+							<div>
+                                <!-- Input States Block -->
+                                <div class="block">
+                                    
+
+                                    <!-- Input States Content -->
+                                    <form action="#" method="post" class="form-horizontal" onsubmit="return false;">
+									<div class="form-group">
+                                            <label class="col-md-3 control-label" for="example-select2">HEI</label>
+                                            <div class="col-md-6">
+                                                <select id="instcode" name="example-select2" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
+                                                    <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+						<?php
+						foreach ($hei_list as $heis):
+						$heiname = strtoupper($heis['instname']);
+						
+						echo "<option value='".$heis['instcode']."'>$heiname</option>";
+						
+						endforeach;
+						?>
+													
+													
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+										<div class="form-group">
+                                            <label class="col-md-3 control-label" for="state-normal">Date Received</label>
+                                            <div class="col-md-6">
+                                                <input type="text" id="datereceived" name="example-datepicker3" class="form-control input-datepicker" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" value="<?php echo date("Y-m-d");?>">
+                                            </div>
+                                        </div>
+										
+										<div class="form-group">
+                                            <label class="col-md-3 control-label" for="state-normal">Program Name / Application *</label>
+                                            <div class="col-md-6">
+												<textarea class="form-control" id="programname" style="height:120px;" ></textarea>
+                                                
+                                            </div>
+                                        </div>
+										
+										
+										
+										<div class="form-group">
+                                            <label class="col-md-3 control-label" for="state-normal">Year Level</label>
+                                            <div class="col-md-6">
+                                                <select id="yearlevel" class="form-control">
+												<option value=""></option>
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+												<option value="4">4</option>
+												<option value="5">5</option>
+												</select>
+                                            </div>
+                                        </div>
+										
+										<div class="form-group">
+                                            <label class="col-md-3 control-label" for="example-select2">Assigned To</label>
+                                            <div class="col-md-6">
+                                                <select id="assigned_to_uid" name="example-select2" class="select-select2" style="width: 100%;" data-placeholder="Choose one..">
+                                                    <option></option><!-- Required for data-placeholder attribute to work with Select2 plugin -->
+													<?php
+													foreach ($employee_list as $technical):
+													
+													
+													echo "<option value='".$technical['uid']."'>".$technical['name']."</option>";
+													
+													endforeach;
+													?>
+													
+													
+                                                </select>
+                                            </div>
+                                        </div>
+										
+										<div class="form-group">
+                                            <label class="col-md-3 control-label" for="state-normal">Status</label>
+                                            <div class="col-md-6">
+                                                <select id="application_status" class="form-control">
+												
+												<option value="Acknowledge">Acknowledge</option>
+												<option value="GPR Application Checklist Prepared">GPR Application Checklist Prepared</option>
+												<option value="Letter of Deficiency">Letter of Deficiency</option>
+												<option value="For RQAT Visit">For RQAT Visit</option>
+												<option value="Visited by RQAT">Visited by RQAT</option>
+												<option value="Awaiting Compliance">Awaiting Compliance</option>
+												<option value="Issued Permit/Recognition">Issued Permit/Recognition</option>
+												
+												</select>
+                                            </div>
+                                        </div>
+                                        
+									
+                                        
+                                        
+                                    </form>
+                                    <!-- END Input States Content -->
+                                </div>
+                                <!-- END Input States Block -->
+							
+							
+							
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-effect-ripple btn-primary" onclick="saveapplication();">Save</button>
+							<button type="button" class="btn btn-effect-ripple btn-danger" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END Regular Modal -->				
+			
+
+			
+		</div>
+		<!-- END Page Content -->
+	</div>
+	<!-- END Main Container -->
+</div>
+<!-- END Page Container -->
+
+
+
