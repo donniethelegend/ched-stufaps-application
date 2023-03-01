@@ -58,6 +58,14 @@ $(function() {
                 
                 
 	});
+	$('#clear').click(function() {
+		
+             $('#signaturecode').text(sig.signature('clear'));
+             
+       
+                
+                
+	});
 });
 </script>
     <div id="modal_signature" class="modal  " tabindex="-1" >
