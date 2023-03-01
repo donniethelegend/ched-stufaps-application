@@ -25,7 +25,11 @@
     </form>
     <link href="public/css/jquery.signature.css" rel="stylesheet">
 <style>
-.kbw-signature { width: 1200%; height: 500px; }
+
+    .kbw-signature { width: 1200%; height: 500px; ;
+}
+    .kbw-signature>canvas {  border-style:solid;
+}
 
 </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -73,16 +77,19 @@ $(function() {
                                             <form action="./myportal/addsignature" method="post" >
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title">Sign above the line</h5>
+								
 								<button type="button" class="close" data-dismiss="modal">×</button>
 							</div>
 
 							<div class="modal-body">
 							
                                                             <div class="row">
-                                                                <div style="position:absolute;width: 98%;border: solid 2px;top:60%;"></div>
-                                                                <div id="sig" class="col-sm-12" >
+                                                                <div style="position:absolute;width: 65%;border: solid 2px;top:60%; left: 2%"></div>
+                                                                <div id="sig" class="col-sm-9" >
                                                                     
+                                                                </div>
+                                                                <div class="col-sm-3" >
+                                                                  <h5 class="modal-title">Draw your signature inside the box above the line.</h5>
                                                                 </div>
                                                                 </div>
                                                             
