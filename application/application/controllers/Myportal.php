@@ -67,12 +67,19 @@ class Myportal  extends CI_Controller{
 	}
         public function login(){
             
-            echo "LOGGING IN...";
+       
             
             $username = $this->input->post('applicationno');	
 		$loginpassword = $this->input->post('mno');	
             
-            $this->onlineapplication_model->verfyMyporttal($username,$loginpassword);
+           if($this->onlineapplication_model->verfyMyporttal($username,$loginpassword)){
+              $urlredirect =  base_url()."myportal";
+               header('Location:'. $urlredirect);
+           }
+           else{
+               $urlredirect =  base_url();
+               header('Location:'.$urlredirect);
+           }
             
             
             
@@ -95,11 +102,12 @@ class Myportal  extends CI_Controller{
             
             
              if($this->onlineapplication_model->insertSignature($sigcode)){
-                 
+                 $urlredirect =  base_url()."myportal";
                  header('location:'. base_url().'myportal');
              }
              else{
-                 header('location:'. base_url().'myportal');
+                 $urlredirect =  base_url();
+                 header('location:'. base_url());
                  
              }
             
@@ -169,8 +177,8 @@ class Myportal  extends CI_Controller{
        if($data){
           
           if($this->onlineapplication_model->uploadpath_otherfiles($data)){
-              
-          header('Location:'. base_url()."myportal");
+              $urlredirect =  base_url()."myportal";
+          header('Location:'.$urlridirect);
           }
           else{
            echo "Failed Upload!";
@@ -205,7 +213,8 @@ class Myportal  extends CI_Controller{
 		//$productID =  $this->uri->segment(3);
 		//echo $two;
 		$this->session->sess_destroy();
-		header('Location:'. base_url());
+		$applicationurl = base_url().'home';
+		header('Location:'. $applicationurl);
 	}
     
 }

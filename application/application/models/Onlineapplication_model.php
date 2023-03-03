@@ -58,7 +58,7 @@ class Onlineapplication_model extends CI_Model
 		
 		
 		if($count ==0){
-			header('Location:'. base_url());
+			return false;
 		}else{
 			
 			$userinfo = $this->db->query("SELECT *
@@ -75,10 +75,9 @@ class Onlineapplication_model extends CI_Model
 			$this->session->set_userdata('contact', $info[0]['contactno']);
 			
 			
+		
 			
-			
-			//echo $this->session->userdata('name');
-			header('Location:'. base_url().'myportal');
+			return true;
 		}
 		//echo intval($permitarray[0]['permitno']);
 	

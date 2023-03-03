@@ -3,15 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp64/www/stufaps_application/application/public/js/application_v10.js</file>
-            <file>file:/C:/wamp64/www/stufaps_application/application/public/js/application.js</file>
-            <file>file:/C:/wamp64/www/stufaps_application/application/application/controllers/Test.php</file>
             <file>file:/C:/wamp64/www/stufaps_application/application/application/controllers/Home.php</file>
-            <file>file:/C:/wamp64/www/stufaps_application/application/public/global_assets/js/demo_pages/form_wizard.js</file>
-            <file>file:/C:/wamp64/www/stufaps_application/application/application/models/Onlineapplication_model.php</file>
-            <file>file:/C:/wamp64/www/stufaps_application/application/application/views/scholarshipapplication/homeboxed_view.php</file>
-            <file>file:/C:/wamp64/www/stufaps_application/application/application/views/scholarshipapplication/testupload.php</file>
-            <file>file:/C:/wamp64/www/stufaps_application/application/application/config/routes.php</file>
+            <file>file:/C:/wamp64/www/stufaps_application/application/application/views/scholarshipapplication/applicationportal.php</file>
         </group>
     </open-files>
 </project-private>
