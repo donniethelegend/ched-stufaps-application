@@ -77,8 +77,8 @@
                                             <span class="caret"></span></a>
                                             <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
                                              
-                                              <li role="presentation"><a role="menuitem" href="index.php/myportal">View My Portal</a></li>
-                                              <li role="presentation"><a role="menuitem" href="index.php/myportal/logout">logout</a></li>
+                                              <li role="presentation"><a role="menuitem" href="./myportal">View My Portal</a></li>
+                                              <li role="presentation"><a role="menuitem" href="./myportal/logout">logout</a></li>
                                             </ul>
                                           </div>
 						

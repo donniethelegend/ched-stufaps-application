@@ -172,13 +172,12 @@ class Home extends CI_Controller
 		$result = $this->onlineapplication_model->saveapplication($formsubmitted);
 		//$result="123";
 		//$clean_result = trim($result);
-                
+               
                    $result_upload = $this->onlineapplication_model->upload_attachment($result);//result is the application id
                    
-                   
+                  if($result_upload){
 		echo json_encode($result);
-		
-		$last_applicant_id = $result;
+                	$last_applicant_id = $result;
 		$contactno = $complete_mobile;
                 
              
@@ -186,11 +185,23 @@ class Home extends CI_Controller
                 
 		//$this->send_sms_bulk($contactno,$last_applicant_id);
 		//$this->emailtosms($contactno,$last_applicant_id);
-		//$this->yeastarsms($contactno,$last_applicant_id);
+		$this->yeastarsms($contactno,$last_applicant_id);
 		//send to admin
-		//$this->sendemailnotification($formsubmitted,$last_applicant_id);
+		$this->sendemailnotification($formsubmitted,$last_applicant_id);
 		
 		
+                
+                
+                
+                  }
+                  else {
+                     
+                      echo "Failed in uploading documents please login to your portal with application number $result and contact number $contactno and re-upload documents";
+                      
+                  }
+                  
+		
+	
 		
 		}//end if condition
 		
@@ -300,7 +311,7 @@ class Home extends CI_Controller
 		$congid_result = $this->onlineapplication_model->congid($congid);
 		echo json_encode($congid_result);
 		}else{
-			header("Location: https://stufaps.chedro1.com/application");
+			header("Location: https://stufaps.chedro1.com/application2023");
 		}
 		
 	}
@@ -314,7 +325,7 @@ class Home extends CI_Controller
 		$congid_result = $this->onlineapplication_model->congid($congid);
 		echo json_encode($congid_result);
 		}else{
-			header("Location: https://stufaps.chedro1.com/application");
+			header("Location: https://stufaps.chedro1.com/application2023");
 		}
 		
 	}
@@ -328,7 +339,7 @@ class Home extends CI_Controller
 		$congid_result = $this->onlineapplication_model->zid($zid);
 		echo json_encode($congid_result);
 		}else{
-			header("Location: https://stufaps.chedro1.com/application");
+			header("Location: https://stufaps.chedro1.com/application2023");
 		}
 	}
 	
@@ -341,7 +352,7 @@ class Home extends CI_Controller
 			//echo ($congid_result);
 			echo json_encode($congid_result);
 		}else{
-			header("Location: https://stufaps.chedro1.com/application");
+			header("Location: https://stufaps.chedro1.com/application2023");
 		}
 
 		
@@ -549,7 +560,7 @@ class Home extends CI_Controller
 <!--[if mso]></td></tr></table><![endif]-->
 <div align="center" class="button-container" style="padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;">
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:45pt; width:255pt; v-text-anchor:middle;" arcsize="100%" stroke="false" fillcolor="#004afd"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:16px"><![endif]-->
-<div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#004afd;border-radius:60px;-webkit-border-radius:60px;-moz-border-radius:60px;width:auto; width:auto;;border-top:1px solid #004afd;border-right:1px solid #004afd;border-bottom:1px solid #004afd;border-left:1px solid #004afd;padding-top:12px;padding-bottom:16px;font-family:Helvetica Neue, Helvetica, Arial, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:32px;padding-right:32px;font-size:16px;display:inline-block;"><span style="font-size: 16px; margin: 0; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><strong><a href="https://stufaps.chedro1.com/application/stufpdf/reprint/'.$applicantid.'/'.$formsubmitted['contactno'].'" style="color:#ffffff;">Download Application Form</a></strong></span></span></div>
+<div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#004afd;border-radius:60px;-webkit-border-radius:60px;-moz-border-radius:60px;width:auto; width:auto;;border-top:1px solid #004afd;border-right:1px solid #004afd;border-bottom:1px solid #004afd;border-left:1px solid #004afd;padding-top:12px;padding-bottom:16px;font-family:Helvetica Neue, Helvetica, Arial, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:32px;padding-right:32px;font-size:16px;display:inline-block;"><span style="font-size: 16px; margin: 0; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><strong><a href="https://stufaps.chedro1.com/application2023/stufpdf/reprint/'.$applicantid.'/'.$formsubmitted['contactno'].'" style="color:#ffffff;">Download Application Form</a></strong></span></span></div>
 <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
 </div>
 <div align="center" class="img-container center autowidth" style="padding-right: 0px;padding-left: 0px;">
@@ -723,7 +734,7 @@ class Home extends CI_Controller
     		$this->email->message($emailContent);
     		
     		if($this->email->send()){
-    			echo json_encode(['res'=>'success']);
+    			//echo json_encode(['res'=>'success']);
     		}else{
     			echo json_encode(['res'=>$this->email->print_debugger()]);
     		}
@@ -939,7 +950,7 @@ class Home extends CI_Controller
 <!--[if mso]></td></tr></table><![endif]-->
 <div align="center" class="button-container" style="padding-top:0px;padding-right:0px;padding-bottom:0px;padding-left:0px;">
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"><tr><td style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:45pt; width:255pt; v-text-anchor:middle;" arcsize="100%" stroke="false" fillcolor="#004afd"><w:anchorlock/><v:textbox inset="0,0,0,0"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:16px"><![endif]-->
-<div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#004afd;border-radius:60px;-webkit-border-radius:60px;-moz-border-radius:60px;width:auto; width:auto;;border-top:1px solid #004afd;border-right:1px solid #004afd;border-bottom:1px solid #004afd;border-left:1px solid #004afd;padding-top:12px;padding-bottom:16px;font-family:Helvetica Neue, Helvetica, Arial, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:32px;padding-right:32px;font-size:16px;display:inline-block;"><span style="font-size: 16px; margin: 0; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><strong><a href="https://stufaps.chedro1.com/application/stufpdf/reprint/'.$applicantid.'/'.$formsubmitted['contactno'].'" style="color:#ffffff;">Download Application Form</a></strong></span></span></div>
+<div style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#004afd;border-radius:60px;-webkit-border-radius:60px;-moz-border-radius:60px;width:auto; width:auto;;border-top:1px solid #004afd;border-right:1px solid #004afd;border-bottom:1px solid #004afd;border-left:1px solid #004afd;padding-top:12px;padding-bottom:16px;font-family:Helvetica Neue, Helvetica, Arial, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:32px;padding-right:32px;font-size:16px;display:inline-block;"><span style="font-size: 16px; margin: 0; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;"><strong><a href="https://stufaps.chedro1.com/application2023/stufpdf/reprint/'.$applicantid.'/'.$formsubmitted['contactno'].'" style="color:#ffffff;">Download Application Form</a></strong></span></span></div>
 <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->
 </div>
 <div align="center" class="img-container center autowidth" style="padding-right: 0px;padding-left: 0px;">

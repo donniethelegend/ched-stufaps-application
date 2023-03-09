@@ -6,10 +6,8 @@ html {
 				<!-- Content area -->
 				<div class="content">
 
-					
+	     
 <!-- Form layouts -->
-
-
 
 <div class="row">
 
@@ -143,15 +141,110 @@ html {
                 color: green;
             }
         </style>
-                                <script type="text/javascript">
-                                   
-                                        
-                                
-                                    
-                                    
-                                $(document).ready(()=>{
+
+                                            <script type="text/javascript">
+$(function() {
+    
+    
+    
+    $('.js-signature').jqSignature({
+        background: '#00000000',
+        lineColor: '#0a0a08',
+        width: 400,
+        height: 200
+    });
+    
+    
+	$('#png').click(function() {
+		
+             $('#signaturecode').text($('.js-signature').jqSignature('getDataURL'));
+             $('#signified').val("Signified ✓");
+           
+                
+                
+	});
+	$('#clear').click(function() {
+		$('.js-signature').jqSignature('clearCanvas');
+       
+             $('#signaturecode').text("");
+              
+                
+                
+	});
+
                                       
+                                                                           
+                                                                           
+                                                                         $('[name="acad_requirement_others"]').hide()
+                                                                           $("#input_fb_acad").hide();
+                                                                        $('[name="isgrad"]').change(function(){
+                                                                             if($(this).val() == 'yes'){
+                                                                                  $('.grade11').find('input[type="file"]').removeClass('required').removeProp('required');
+                                                                                  $('.grade11').hide()
+                                                                                   $('#acad_requirement_g12_front').parent('.form-group').find('label').eq(0).html('<b>Duly Certified Form 138:</b> ')
+                                                                                 
+                                                                                  
+                                                                              }
+                                                                              else{
+                                                                                   $('.grade11').find('input[type="file"]').addClass('required').prop('required',true);
+                                                                                  $('.grade11').show()
+                                                                                    $('#acad_requirement_g12_front').parent('.form-group').find('label').eq(0).html('<b>Grade 12 Grades first three grading period:</b> ')
+                                                                                 
+                                                                              }
+                                                                        });
+                                                                        $('[name="stacked-radio-left"]').change(function(){
+                                                                            var isgrad = $('[name="isgrad"]');
+                                                                            isgrad.eq(0).prop('checked',true)
+                                                                            
+                                                                           if($(this).val()=="incoming1styear"){
+                                                                               
+                                                                            
+                                                                               
+                                                                               
+                                                                               
+                                                                               $('[name="acad_requirement_others"]').removeProp('required');
+                                                                               $('[name="acad_requirement_others"]').removeClass('required');
+                                                                               $('[name="acad_requirement_others"]').hide()
+                                                                               $("#input_fb_acad").find('input[type="file"]').addClass('required');
+                                                                               $("#input_fb_acad").find('input[type="file"]').prop('required',true);
+                                                                               $("#input_fb_acad").show();
+                                                                               
+                                                                            
+                                                                              if(isgrad.val() == 'yes'){
+                                                                               
+                                                                                  $('.grade11').find('input[type="file"]').removeClass('required').removeProp('required');
+                                                                                  $('.grade11').hide()
+                                                                                
+                                                                                  
+                                                                              }
+                                                                              else{
+                                                                                   $('.grade11').find('input[type="file"]').addClass('required').prop('required',true);
+                                                                                  $('.grade11').show()
+                                                                                  
+                                                                              }
+            
+            
+            
+                                                                            
+                                                                            
+                                                                           }
+                                                                           else if($(this).val()=="others"){
+                                                                               $('[name="acad_requirement_others"]').prop('required',true);
+                                                                               $('[name="acad_requirement_others"]').addClass('required');
+                                                                               $('[name="acad_requirement_others"]').show()
+                                                                                $("#input_fb_acad").find('input[type="file"]').removeProp('required');
+                                                                                $("#input_fb_acad").find('input[type="file"]').removeClass('required');
+                                                                                $("#input_fb_acad").hide();
+                                                                                $('[name="isgrad"]').removeProp('checked');
+                                                                           }
+
+
+
+
+                                                                      
+                                                                        });
                                     $('#apppwd').change(function(){
+                                        console.log('sdfsdf');
                                         if($(this).val()=="Yes"){
                                             $('[name="PWD_id"]').addClass('required')
                                             $('[name="PWD_id"]').attr('required',true)
@@ -167,11 +260,7 @@ html {
                                         }
                                     })
                                     
-                                });
-                                
-                                    
-                                    
-                                $(document).ready(()=>{
+                               
       $('#photo').change(function(){
         const file = this.files[0];
 
@@ -181,7 +270,7 @@ html {
         if (file){
           let reader = new FileReader();
           reader.onload = function(event){
-            console.log(event.target.result);
+          //  console.log(event.target.result);
             $('#imgPreview').attr('src', event.target.result);
             $("div.holder").removeClass("d-none")
           }
@@ -211,7 +300,7 @@ html {
                                                                                     <img id="imgPreview" src="#" alt="pic" />
                                                                                 </div>
 										<label>Upload 2x2 Picture: <span class="text-danger">*</span></label>
-                                                                                <input type="file" accept="image/png,image/jpeg " name="photograph"
+                                                                                <input type="file" accept="image/*" name="photograph"
                                                                                 id="photo" required="true" class="form-control"/>
 												
 		                               
@@ -228,6 +317,18 @@ html {
                                                                         </div>
 								
 								</div>
+							<div class="row">
+								
+									<div class="form-group">
+									<textarea required id="signaturecode" name="signaturecode" class="d-none" ></textarea>
+                                                                        	
+                                                                        <input required class="form-control btn-link btn" data-toggle="modal" data-target="#modal_signature2" placeholder="Click to Signify" id ="signified" readonly />
+                                                                                 		
+		                               
+                                                                        </div>
+								
+								</div>
+							
                                                         
                                                     </div>
                                                     <div class="col-sm-4">
@@ -236,26 +337,88 @@ html {
                                                         </div>
 							<div class="row">
 								
+                                                            
+                                                            				<div class="form-group pt-2">
+									
+									
+
+
+									
+								
+                                                            
+                                                            
+                                                            
 									<div class="form-group">
-                                                                            <label>For Incoming First Year Students </small>: <span class="text-danger">*</span>
-                                                                            <br/><small><i>Grade 11 grades and first three grading periods of Grade 12 grades duly certified by the school’s registrar; <br/> Grade 12, Form 138 duly certified by the school’s registrar</i></small>
+                                                                            
+                                                                            <div class="form-check">
+										<label class="form-check-label">
+											<input type="radio" required  class="form-check-input-styled" value="incoming1styear" name="stacked-radio-left" data-fouc="">
+											Incoming First Year Students  <span class="text-danger">*</span>
+										</label>
+									</div>
+                                                                            <label class="col-sm-11">
+                                                                                <small>
+                                                                                    <label class="form-check-label"><b> <input type="radio"   name="isgrad" value="no" />
+                                                                                            Current Grade 12 - </b><i>Grade 11 grades and first three grading periods of Grade 12 grades duly certified by the school’s registrar; </i>
+                                                                                        </label>
+                                                                                        <br/> <label><b><input type="radio"  name="isgrad" value="yes" /> Grade 12 Graduates  - </b>
+                                                                                                <i> Grade 12, Form 138 duly certified by the school’s registrar</i> </label></small>
+                                                                               
                                                                             </label>
+                                                                            
+                                                                            <div class="form-check">
+										<label class="form-check-label">
+											<input type="radio" required class="form-check-input-styled" value="others" name="stacked-radio-left" data-fouc="">
+											Other Applicants <span class="text-danger">*</span>
+										</label>
+									</div>
+                                                        
+                                                                              <label class="col-sm-11">
+                                                                                <small><i><b>ALS</b> – Accreditation and Equivalency Test Passer Certificate
+                                                                                        <br/><b>PEPT</b> – Certificate of Advancing to the Next Level</i>
+                                                                            </small>
+                                                                            </label>
+                                                                            
+                                                                            <div  id="input_fb_acad">
+                                                                               
+                                                                                  <div class="form-group grade11">
+                                                                                      <label><b >Grade 11 Grades:</b></label><br/>
+                                                                                <label for="acad_requirement_g11_front" class="btn btn-primary btn-sm " >Upload Front Page</label>
+                                                                                
+                                                                                 <input type="file" required name="acad_requirement_g11_front" id="acad_requirement_g11_front" accept="application/pdf, image/png,image/jpeg "  class="form-control required"/>
+                                                                                 
+                                                                                 <label for="acad_requirement_g11_back" class="btn btn-primary btn-sm " >Upload Back Page</label>
+                                                                                 <input type="file" required  id="acad_requirement_g11_back" name="acad_requirement_g11_back" accept="application/pdf, image/png,image/jpeg "  class="form-control required"/>
+                                                                                </div>
+                                                                               
+                                                                                <div class="form-group">
+                                                                                    <label>     <b >Grade 12 Grades first three grading period:</b></label><br/>
+                                                                                <label for="acad_requirement_g12_front" class="btn btn-primary btn-sm " >Upload Front Page</label>
+                                                                                
+                                                                                 <input type="file" required name="acad_requirement_g12_front" id="acad_requirement_g12_front" accept="application/pdf, image/png,image/jpeg "  class="form-control required"/>
+                                                                                 
+                                                                                 <label for="acad_requirement_g12_back" class="btn btn-primary btn-sm " >Upload Back Page</label>
+                                                                                 <input type="file" required  id="acad_requirement_g12_back" name="acad_requirement_g12_back" accept="application/pdf, image/png,image/jpeg "  class="form-control required"/>
+                                                                                </div>
+                                                                            </div>
                                                                                
 									
 							<br/>
-                                                                           
-												
-		                               
-							
-                                                                            <label>For other Applicants </small>: <span class="text-danger">*</span>
-                                                                            <br/><small><i>ALS – Accreditation and Equivalency Test Passer Certificate<br/>PEPT – Certificate of Advancing to the Next Level</i>
-                                                                            </small>
-                                                                            </label>
-                                                                                <input type="file" name="acad_requirement" accept="application/pdf, image/png,image/jpeg " required="true" class="form-control required"/>
+                                                                                <input type="file" name="acad_requirement_others" accept="application/pdf, image/png,image/jpeg "  class="form-control  "/>
 												
 		                               
                                                                         </div>
-							
+                                                                                            </div>
+                                                            
+                                                                <style>
+                                                                    #input_fb_acad input::file-selector-button {
+                                                                       
+                                                                        content: "waha";
+                                                                       display: none;
+                                                                      }
+                                                                   
+                                                                  
+                                                                </style>
 								</div>
                                                         
                                                     </div>
@@ -1308,3 +1471,44 @@ html {
 
 				</div>
 				<!-- /content area -->
+                               
+
+
+
+
+   
+  
+    <div id="modal_signature2" class="modal  " tabindex="-1" >
+					<div class="modal-dialog modal-md">
+                                           
+						<div class="modal-content">
+							<div class="modal-header">
+                                                            <h2>Draw your signature inside the box above the line.</h2>
+								<button type="button" class="close" data-dismiss="modal">×</button>
+							</div>
+
+							<div class="modal-body">
+							
+                                                            <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div style="position:absolute;width: 70%;border: solid 2px;top:60%; left: 6%"></div>
+                                                               
+                                                                    <div class='js-signature' class="col-sm-12"></div>
+                                                                
+                                                               
+                                                                </div>
+                                                                </div>
+                                                            
+                                                            
+                                                        </div>
+
+							<div class="modal-footer">
+								<button type="button" id="clear" class="btn btn-link" >Clear</button>
+								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+								<button type="button" id="png" data-dismiss="modal" class="btn bg-primary">Save changes</button>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+

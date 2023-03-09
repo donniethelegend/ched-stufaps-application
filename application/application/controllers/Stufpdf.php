@@ -699,7 +699,7 @@ class Stufpdf extends CI_Controller
 	        				<td colspan="9">
                                                 
                                                 <center class="input" style="margin-top: 13px;">
-                                      <img src="'.$signature.'" style="position:absolute; width:160px; left:150px; top:645px" />
+                                      <img src="'.$signature.'" style="position:absolute; width:160px; left:150px; top:620px" />
                                                 
                                                 '.$printedName.'</center>
                                                     </td>
@@ -1538,7 +1538,7 @@ class Stufpdf extends CI_Controller
         				</tr>
 	        			<tr height="6">
 	        				<td colspan="9"><center class="input" style="margin-top: 13px;">
-                                                <img src="'.$signature.'" style="position:absolute; width:160px; left:150px; top:645px" />
+                                                <img src="'.$signature.'" style="position:absolute; width:160px; left:150px; top:620px" />
                                                 <br/>
                                                     '.$printedName.'</center></td>
         					<td colspan="4">

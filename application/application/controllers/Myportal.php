@@ -51,9 +51,11 @@ class Myportal  extends CI_Controller{
                 
                 if($_SESSION['applicantid']){
                     $app_id  = $_SESSION['applicantid'];
-                    
+                  
                     $data['application_details'] = $this->onlineapplication_model->getApplication_details($app_id);
                     $data['otherfiles'] = $this->onlineapplication_model->getApplication_otherfiles($app_id);
+                    
+                    
 		$this->load->view('scholarshipapplication/applicationportal',$data);
                 }
                 else{
@@ -73,12 +75,13 @@ class Myportal  extends CI_Controller{
 		$loginpassword = $this->input->post('mno');	
             
            if($this->onlineapplication_model->verfyMyporttal($username,$loginpassword)){
-              $urlredirect =  base_url()."myportal";
-               header('Location:'. $urlredirect);
+             
+              redirect(base_url().'myportal');
+               //header('Location:'. $urlredirect);
            }
            else{
-               $urlredirect =  base_url();
-               header('Location:'.$urlredirect);
+             
+               redirect(base_url());
            }
             
             
@@ -96,32 +99,77 @@ class Myportal  extends CI_Controller{
     
             
             $sigcode = $this->input->post('signaturecode');	
-	
+	$id  = $_SESSION['applicantid'];
 
            // $this->onlineapplication_model->verfyMyporttal($username,$loginpassword);
             
             
-             if($this->onlineapplication_model->insertSignature($sigcode)){
-                 $urlredirect =  base_url()."myportal";
-                 header('location:'. base_url().'myportal');
+             //if($this->onlineapplication_model->insertSignature($sigcode)){
+               if($this->onlineapplication_model->update_on_key_duplicate("scholarship_attached_requirement",'signature',$sigcode,$id,'id')){
+                // header('location:'.base_url().'myportal');
+                 redirect(base_url().'myportal');
              }
              else{
-                 $urlredirect =  base_url();
-                 header('location:'. base_url());
+            
+                redirect(base_url());
                  
              }
             
+        }
+        public function updateprofilepic(){
             
+        $now = new DateTime();
+		$now->setTimezone(new DateTimezone('Asia/Manila'));
+		$now_timestamp = $now->format('Y-m-d H:i:s');
+		$current_year = $now->format('Y');
+		$current_month = $now->format('m');
+                 $id  = $_SESSION['applicantid'];
+                
+                   $path_year   = './uploads/requirements/'.$current_year.'/'.$current_month."/";
             
-            
-            
-            
-            
-            
+                   if(!is_dir($path_year)){                                      
+                    mkdir($path_year, 0777, true);
+                }
+                 $data = array();
+               
+                 $config['allowed_types'] = 'gif|jpg|png|pdf';
+                 $config['upload_path'] = $path_year;
+                 $this->load->library('upload',$config);
+                   
+                 if($this->upload->do_upload('profilepic')){
+                       
+                 $data =$path_year.$this->upload->data('file_name');
+                     $id = $_SESSION['applicantid'];
+                     if($this->onlineapplication_model->update_on_key_duplicate("scholarship_attached_requirement",'picture22',$data,$id,'id')){
+               
+                 
+               
+                          // header('location:'.base_url().'myportal');
+                          redirect(base_url().'myportal');
+                          }
+                          else{
+                 redirect(base_url());
+                                       
+
+                          }
+                 }
+                 else{
+                     
+                     echo var_dump($this->upload->display_errors());
+                 }
+                 
+                 
             
         }
+        public function getprofilerecord(){
+             if($_SESSION['applicantid']){
+                    $app_id  = $_SESSION['applicantid'];
+                  
+                    echo "<pre>".var_dump($this->onlineapplication_model->getApplication_details($app_id))."</pre>";
+             }
+        }
         public function uploadfiles(){
-   
+ 
             $now = new DateTime();
 		$now->setTimezone(new DateTimezone('Asia/Manila'));
 		$now_timestamp = $now->format('Y-m-d H:i:s');
@@ -134,13 +182,18 @@ class Myportal  extends CI_Controller{
                    if(!is_dir($path_year)){                                      
                     mkdir($path_year, 0777, true);
                 }
-                     $data = array();
+                 $data = array();
                  $countfiles = count($_FILES['upload']['name']);
-
-             $config['allowed_types'] = 'gif|jpg|png|pdf';
+                 $config['allowed_types'] = 'gif|jpg|png|pdf';
                  $config['upload_path'] = $path_year;
                  $this->load->library('upload',$config);
+                 
+                 $typedoc = $this->input->post('doctype');
+                // echo $countfiles." = Number of Files";
+             
+                 
        for($i=0;$i<$countfiles;$i++){
+      
             if(!empty($_FILES['upload']['name'][$i])){
                    // Define new $_FILES array - $_FILES['file']
           $_FILES['file']['name'] = $_FILES['upload']['name'][$i];
@@ -149,10 +202,7 @@ class Myportal  extends CI_Controller{
           $_FILES['file']['error'] = $_FILES['upload']['error'][$i];
           $_FILES['file']['size'] = $_FILES['upload']['size'][$i];
 
-          
-         
-         
-          $config['file_name'] =$id.md5($now->format('Y-m-d H:i:s')). $_FILES['upload']['name'][$i];
+             $config['file_name'] =$id.'_'.$typedoc.''.md5($now->format('Y-m-d H:i:s')). $_FILES['upload']['name'][$i];
           
              $this->upload->initialize($config);
              
@@ -160,25 +210,30 @@ class Myportal  extends CI_Controller{
                
                  $data[] = array("filepath"=>$path_year.$this->upload->data('file_name'),
                      "applicationid"=>$id,
-                     "filename"=>$_FILES['upload']['name'][$i],
-                     "timestamp"=>$now_timestamp
+                     "filename"=>$typedoc.'_'.$now_timestamp ,
+                     "timestamp"=>$now_timestamp,
+                     "type_of_document"=>$typedoc
                          ,"id"=>null);
+                
+             }
+             else{
                  
-                 
-                 
-                 
-                 
+                 echo $this->upload->display_errors();
              }
 
             
           
             }
        }
+    
+      //echo var_dump($data);
        if($data){
           
+           
+          // echo var_dump($data);
           if($this->onlineapplication_model->uploadpath_otherfiles($data)){
-              $urlredirect =  base_url()."myportal";
-          header('Location:'.$urlridirect);
+              
+		redirect(base_url().'myportal');
           }
           else{
            echo "Failed Upload!";
@@ -208,13 +263,22 @@ class Myportal  extends CI_Controller{
         }
         
 	
+	public function showtimestamp(){
+            
+            echo "dsdsd";
+	 $now = new DateTime();
+		$now->setTimezone(new DateTimezone('Asia/Manila'));
+                echo date_timestamp_get($now);
+	}
+	
 	public function logout(){
 		//$this->load->view('inc/header_view');
 		//$productID =  $this->uri->segment(3);
 		//echo $two;
 		$this->session->sess_destroy();
-		$applicationurl = base_url().'home';
-		header('Location:'. $applicationurl);
+                
+		redirect(base_url().'home');
+		
 	}
     
 }

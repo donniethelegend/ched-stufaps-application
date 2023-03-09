@@ -9,7 +9,6 @@
 
 // Setup module
 // ------------------------------
-
 var FormWizard = function() {
 
 
@@ -169,7 +168,7 @@ var FormWizard = function() {
             onFinished: function (event, currentIndex) {
                 
 				//form.submit();
-				//$('#spinner-light').click();
+				$('#spinner-light').click();
 				
 
 				var form = document.getElementById("application_form");
@@ -183,6 +182,11 @@ var FormWizard = function() {
 					data: formData,
 					processData: false,
 					contentType: false,
+                                         beforeSend: function( xhr ) {
+    console.log('sending');
+    
+  }
+                                        ,
 					success: function(response) {
 						var data = JSON.parse(response);
 						console.log(data);

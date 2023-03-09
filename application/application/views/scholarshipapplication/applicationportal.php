@@ -9,87 +9,105 @@
         
         
       </h3>   
+ <script src="<?= base_url() ?>public/global_assets/js/plugins/forms/selects/select2.min.js"></script>
+
     
+ 
  <?php echo form_open_multipart('myportal/uploadfiles');?>
     <form class="form-horizontal form-control"  method="post" enctype="multipart/form-data" >
         <div class="row">
             <div class="col">
                 <input type="file" required name="upload[]" multiple="true" class="form-control" placeholder="Upload Other Documents Here"/>
         </div>
+            <div class="col">
+              
+                                                                                    <div class="form-group">
+												<select required="required" name="doctype" data-placeholder="Document Type" class="form-control required  " >
+                                                                                                    <option disabled selected value=""> -----DOCUMENT TYPE------</option>
+													<option value="Birth Certificate">Birth Certificate</option>
+													<option value="Income Documents">Income Documents</option>
+													<option value="Identification Card(ID)">Identification Card(ID)</option>
+													<option value="Academic Requirements">Academic Requirements</option>
+													<option value="Others">Others</option>
+													
+
+												</select>
+											</div>
+        </div>
         <div class="col">
      
         <button type="submit" class="btn btn-success">Upload</button> 
-        <button type="button" data-toggle="modal" data-target="#modal_signature" class="btn btn-primary">Add/Update Signature</button> 
+        
         </div>
         </div>
     </form>
     <link href="public/css/jquery.signature.css" rel="stylesheet">
 <style>
 
-    .kbw-signature { width: 1200%; height: 500px; ;
+    .kbw-signature { width: 430%; height: 300px; ;
 }
     .kbw-signature>canvas {  border-style:solid;
 }
 
 </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="<?= base_url()?>public/js/forsignature/jquery.signature.js"></script>
-<script src="<?= base_url()?>public/js/forsignature/jquery.ui.touch-punch.min.js"></script>
-
 
    
     <script>
-$(function() {
-	var sig = $('#sig').signature({background:"#00000000", thickness: 6,
-            guideline: false, // Add a guide line or not? 
-    guidelineColor: '#ud93nn', // Guide line colour 
-    guidelineOffset: 150, // Guide line offset from the bottom 
-    guidelineIndent: 10 // Guide line indent from the edges
-     });
-        
-	$('#disable').click(function() {
-		var disable = $(this).text() === 'Disable';
-		$(this).text(disable ? 'Enable' : 'Disable');
-		sig.signature(disable ? 'disable' : 'enable');
-	});
+$(document).ready(function(){
+
+    
+   
+    
+    
+    
+    $('.js-signature').jqSignature({
+        background: '#00000000',
+        lineColor: '#0a0a08',
+        width: 400,
+        height: 200
+    });
+    
+    
+    
+    
+    
 
 	$('#png').click(function() {
-		
-             $('#signaturecode').text(sig.signature('toDataURL'));
-             
-             $(this).parents('form').submit();
-                
+		console.log('dsdsd');
+             $('#signaturecode').text($('.js-signature').jqSignature('getDataURL'));
+        
+           
+                $('#submitmesig').submit()
                 
 	});
 	$('#clear').click(function() {
-		
-             $('#signaturecode').text(sig.signature('clear'));
-             
+		$('.js-signature').jqSignature('clearCanvas');
        
+             $('#signaturecode').text("");
+              
                 
                 
 	});
 });
 </script>
     <div id="modal_signature" class="modal  " tabindex="-1" >
-					<div class="modal-dialog modal-full">
-                                            <form action="./myportal/addsignature" method="post" >
+					<div class="modal-dialog modal-md">
+                                            <form id="submitmesig" action="./myportal/addsignature" method="post" >
 						<div class="modal-content">
 							<div class="modal-header">
-								
+                                                            <h2>Draw your signature inside the box above the line.</h2>
 								<button type="button" class="close" data-dismiss="modal">×</button>
 							</div>
 
 							<div class="modal-body">
 							
                                                             <div class="row">
-                                                                <div style="position:absolute;width: 65%;border: solid 2px;top:60%; left: 2%"></div>
-                                                                <div id="sig" class="col-sm-9" >
-                                                                    
-                                                                </div>
-                                                                <div class="col-sm-3" >
-                                                                  <h5 class="modal-title">Draw your signature inside the box above the line.</h5>
+                                                             <div class="col-sm-12">
+                                                                <div style="position:absolute;width: 70%;border: solid 2px;top:60%; left: 6%"></div>
+                                                               
+                                                                    <div class='js-signature' class="col-sm-12"></div>
+                                                                
+                                                               
                                                                 </div>
                                                                 </div>
                                                             
@@ -99,7 +117,7 @@ $(function() {
 							<div class="modal-footer">
 								<button type="button" id="clear" class="btn btn-link" >Clear</button>
 								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-								<button type="button" id="png" class="btn bg-primary">Save changes</button>
+								<button type="button" id="png"  class="btn bg-primary">Save changes</button>
 							</div>
 						</div>
 						</form>
@@ -108,90 +126,294 @@ $(function() {
     
     
     
-
  <div class="table-responsive">
+     
 							<table class="table table-hover">
-								<thead>
-									<tr>
-									
-										<th>Filename</th>
-										<th>Action</th>
-									
-									</tr>
-								</thead>
+								
 								<tbody>
                                                                     
                                                                   	<tr>
 									
-										<td>2 x 2 Picture</td>
-                                                                                <td><div class="btn-group">
-                                                                                        <a target="_blank" download href="<?= $application_details['picture22'] ?>" class="btn btn-xs">Download</a>
+										<td align="left">
+                                                                                 
+                                                                                    <?php if($application_details['picture22']){ ?>
+                                                                                        <img  src="<?= $application_details['picture22'] ?>" width="100px"/>
+                                                                                        <?php } else{ ?>
                                                                                         
-                                                                                    </div><td>
-									
-									</tr>
-                                                                  	<tr>
-										
-										<td>Birth Certificate</td>
-                                                                                <td><div class="btn-group">
-                                                                                         <a target="_blank" download href="<?= $application_details['birth_certificate'] ?>" class="btn btn-xs">Download</a>
-                                                                                       
-                                                                                    </div><td>
-									
-									</tr>
-                                                                  	<tr>
-										
-										<td>Academic Requirement</td>
-                                                                                <td><div class="btn-group">
-                                                                                          <a target="_blank" download href="<?= $application_details['academic_requirement'] ?>"  class="btn btn-xs">Download</a>
+                                                                                        
+                                                                                        <span width="100px" height="100px" style="font-size:100pt; border: solid 1px; padding: 5px" class="icon-user"></span>
+                                                                                        <?php }  ?>
+                                                                                        <form class="form-horizontal form-group"
+                                                                                            id="submitpic" action="./myportal/updateprofilepic" method="post" enctype="multipart/form-data">
+                                                                                            <div class="row">
+                                                                                            <div class="col-sm-6">
+                                                                                            <input type="file" accept="image/*" required name="profilepic" class="form-control"/>    
+                                                                                            </div>
+                                                                                            <div class="col-sm-6">
+                                                                                            <button class="btn btn-primary" type="submit">Upload</button>
+                                                                                            </div>
+                                                                                            </div>
+                                                                                            
+                                                                                            
+                                                                                            
+                                                                                        </form>
+                                                                               
+                                                                                    <br/>
+                                                                                 
+                                                                                 
+                                                                                        <?php if($application_details['signature']){ ?>
+                                                                                    <a target="_blank" download href="<?= $application_details['signature'] ?>" class="btn btn-link btn-md " style="background-color: whitesmoke"><img  src="<?= $application_details['signature'] ?>" width="100px"/> </a>
+                                                                                        <?php }
+                                                                                        else{
+                                                                                            echo "<label>No Signature Attached</label>";
+                                                                                            
+                                                                                        }?>
+                                                                                          <br/>
+                                                                                        
+                                                                                          <button type="button" data-toggle="modal" data-target="#modal_signature" class="btn btn-link"> <span class="icon-quill4" ></span> Update Signature </button> 
+                                                                                  
+                                                                                </td>
+										<td>
                                                                                     
-                                                                                    </div><td>
-									
-									</tr>
-                                                                  	<tr>
-										
-										<td>Income Requirement</td>
-                                                                                <td><div class="btn-group">
-                                                                                        <a target="_blank" download href="<?= $application_details['income_requirement'] ?>"  class="btn btn-xs">Download</a>
                                                                                     
-                                                                                    </div><td>
-									
-									</tr>
-                                                                  	<tr>
-										
-										<td>PWD ID</td>
-                                                                                <td><div class="btn-group">
-                                                                                        <a target="_blank" download href="<?= $application_details['pwd_id'] ?>"  class="btn btn-xs">Download</a>
-                                                                                       
-                                                                                    </div><td>
-									
-                                                                        </tr>
-                                                                        <?php if($application_details['signature']){ ?>
-                                                                  	<tr>
-										
-										<td>Signature</td>
-                                                                                <td><div class="btn-group">
-                                                                                          <a target="_blank" download href="<?= $application_details['signature'] ?>" class="btn btn-xs">Download</a>
+                                                                                    <table class="table requirements">
+                                                                                        <thead>
+                                                                                        <tr>
+                                                                                            <th> Primary Requirement</th>
+                                                                                            <th> Action</th>
+                                                                                            
+                                                                                        </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td>Application Form</td>
+                                                                                                <td>
+                                                                                                    <a target="_blank"  href="./stufpdf/reprint/<?= $application_details['applicantid']?>/<?=$application_details['contactno']?>" class="btn btn-xs"><span class="icon-file-download2"></span> </a>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>Birth Certificate</td>
+                                                                                                <td>
+                                                                                                   
+                                                                                                      <?php if($application_details['birth_certificate']){ ?>
+                                                                                                        <a target="_blank" download href="<?= $application_details['birth_certificate'] ?>" class="btn btn-xs"><span class="icon-file-download2"></span> </a>
+
+                                                                                                         <?php }
+                                                                                                         else{
+                                                                                                             ?>
+                                                                                                        
+                                                                                                        <form class="form-horizontal form-group submitupdate"
+                                                                                                        action="./myportal/uploadupdate?field=birth_certificate" 
+                                                                                                        method="post" enctype="multipart/form-data">
+                                                                                                            <div class="row">
+                                                                                                            
+                                                                                                              
+                                                                                                        <input required type="file"  name="filetoupdate" id="filetoup1"/>
+                                                                                                        
+                                                                                                     
+                                                                                                             
+                                                                                                        </div>
+                                                                                                        </form>
+                                                                                                        
+                                                                                                        <?php 
+
+                                                                                                         }
+                                                                                                            ?>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                             <?php if($application_details['app_pwd']=="Yes"){ ?>
+                                                                                            <tr>
+                                                                                                <td>PWD ID/Document</td>
+                                                                                                <td>
+                                                                                                   
+                                                                                                    <?php if($application_details['pwd_id']){ ?>
+                                                                                                    <a target="_blank" download href="<?= $application_details['pwd_id'] ?>"  class="btn btn-xs"> <span class="icon-file-download2"></span></a>
+                                                                                                        <br/>
+                                                                                                    <?php }
+                                                                                                    else{
+                                                                                                        echo     ' <a  class="btn btn-xs"><span class="icon-file-upload2"></span> </a>';
+                                                                                                    }
+                                                                                                    ?>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                             <?php }?>
+                                                                                        
+                                                                                            <tr>
+                                                                                                <td>Income Requirement</td>
+                                                                                                <td>
+                                                                                                   
+                                                                                                     <?php if($application_details['income_requirement']){ ?>
+                                                                                    <a target="_blank" download href="<?= $application_details['income_requirement'] ?>"  class="btn btn-xs"> <span class="icon-file-download2"></span> </a>
+                                                                                   
+                                                                                     <?php }
+                                                                                     else{
+                                                                                         echo ' <a  class="btn btn-xs"><span class="icon-file-upload2"></span> </a>';
+                                                                                         
+                                                                                     }
+                                                                                        ?>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        
+                                                                                            
+                                                                                            
+                                                                                        </tbody>
+                                                                                    </table>
                                                                                     
-                                                                                    </div><td>
+                                                                                    
+                                                                                    
+                                                                                
+                                                                                </td>
+                                                                                <td>
+                                                                                    
+                                                                                     <table class="table requirements">
+                                                                                        <thead>
+                                                                                        <tr>
+                                                                                            <th> Academic Requirement</th>
+                                                                                            <th> Front Copy</th>
+                                                                                            <th> Rear Copy</th>
+                                                                                            
+                                                                                        </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    Grade 11 Record/s 
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                  
+                                                                                                     <?php if($application_details['academic_requirement_g11_front']){ ?>
+                                                                                    <a target="_blank" download href="<?= $application_details['academic_requirement_g11_front'] ?>"  class="btn btn-xs"><span class="icon-file-download2"></span> </a>
+                                                                                    
+                                                                                     <?php }
+                                                                                     else{
+                                                                                         echo ' <a  class="btn btn-xs"><span class="icon-file-upload2"></span> </a>';
+                                                                                         
+                                                                                     }
+                                                                                     ?>
+                                                                                     </td>
+                                                                                     <td>
+                                                                                     <?php
+                                                                                       if($application_details['academic_requirement_g11_back']){ ?>
+                                                                                    <a target="_blank" download href="<?= $application_details['academic_requirement_g11_back'] ?>"  class="btn btn-xs"><span class="icon-file-download2"></span> </a>
+                                                                                    
+                                                                                     <?php }
+                                                                                     else{
+                                                                                         echo ' <a  class="btn btn-xs"><span class="icon-file-upload2"></span> </a>';
+                                                                                         
+                                                                                     }
+                                                                                                  ?>  
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                         
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    Grade 12 Record 
+                                                                                                </td>
+                                                                                                <td>
+                                                                                                    <?php 
+                                                                                                if($application_details['academic_requirement_g12_front']){ ?>
+                                                                                    <a target="_blank" download href="<?= $application_details['academic_requirement_g12_front'] ?>"  class="btn btn-xs"><span class="icon-file-download2"></span> </a>
+                                                                                    
+                                                                                     <?php }
+                                                                                     else{
+                                                                                         echo ' <a  class="btn btn-xs"><span class="icon-file-upload2"></span> </a>';
+                                                                                         
+                                                                                     }
+                                                                                     ?>
+                                                                                    
+                                                                                                </td>
+                                                                                                <td>
+                                                                                     <?php
+                                                                                      if($application_details['academic_requirement_g12_back']){ ?>
+                                                                                   <a target="_blank" download href="<?= $application_details['academic_requirement_g12_back'] ?>"  class="btn btn-xs"><span class="icon-file-download2"></span> </a>
+                                                                                    
+                                                                                     <?php }
+                                                                                     else{
+                                                                                         echo ' <a  class="btn btn-xs"><span class="icon-file-upload2"></span> </a>';
+                                                                                         
+                                                                                     }
+                                                                                     ?>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    Other (ALS/PEPT)
+                                                                                                </td>
+                                                                                                <td colspan="2">
+                                                                                                     <?php
+                                                                                     
+                                                                                       if($application_details['academic_requirement_others']){ ?>
+                                                                                   <a target="_blank" download href="<?= $application_details['academic_requirement_others'] ?>"  class="btn btn-xs"><span class="icon-file-download2"></span> </a>
+                                                                                    
+                                                                                     <?php }
+                                                                                     else{
+                                                                                         echo ' <a  class="btn btn-xs"><span class="icon-file-upload2"></span> </a>';
+                                                                                         
+                                                                                     }
+                                                                                     ?>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                     </table>
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                   
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                </td>
 									
 									</tr>
-                                                                        <?php }
+                                                                  	
+                                                                  	
                                                                         
+                                                                  
+                                                                      
+                                                                  	
+                                                                        <?php 
                                                                         
+                                                                       
+                                                                        if($otherfiles){
+                                                                            echo '<tr>
+										
+										<td><b><h3>Other Files Uploaded</h3></b></td>
+                                                                                <td><td>
+									
+									</tr>';
                                                                         foreach($otherfiles as $file){
                                                                             echo '
                                                                                 	<tr>
 										
 										<td>'.$file['filename'].'</td>
                                                                                 <td><div class="btn-group">
-                                                                                          <a target="_blank" download href="'.$file['filepath'].'" class="btn btn-xs">Download</a>
+                                                                                          <a target="_blank" download href="'. $file['filepath'].'" class="btn btn-xs">Download</a>
                                                                                     
                                                                                     </div><td>
 									
 									</tr>
                                                                             ';
                                                                             
+                                                                        }
                                                                         }
                                                                         
                                                                         

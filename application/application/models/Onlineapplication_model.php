@@ -20,7 +20,7 @@ class Onlineapplication_model extends CI_Model
 		//$result = $this->db->get('contacts');
 		$sqlquery = $this->db->query("SELECT * FROM `scholarship_otherfiles` WHERE applicationid = '$id' ");
 		$sql_result = $sqlquery->result_array();
-		return $sql_result[0];
+		return $sql_result;
 		
 		
 	}
@@ -90,10 +90,13 @@ class Onlineapplication_model extends CI_Model
 	public function uploadpath_otherfiles($data)
         {
             
-             $this->db->insert_batch('scholarship_otherfiles', $data); 
             
-            if($this->db->affected_rows() > 0)
+        $this->db->insert_batch('scholarship_otherfiles', $data); 
+            
+        if($this->db->affected_rows() > 0)
 		{
+            
+        //    echo var_dump($this->db->error()); 
             return true;
         }
         else{
@@ -109,12 +112,40 @@ class Onlineapplication_model extends CI_Model
             
             $data = array('signature' => $data);
             $id = $_SESSION['applicantid'];
-            echo $id;
+          //  echo $id;
             $this->db->where('id', $id);
             $this->db->update('scholarship_attached_requirement', $data);
             
             
           
+            
+            if($this->db->affected_rows() > 0)
+		{
+            return true;
+        }
+        else{
+            
+            return false;
+        }
+          
+            
+        }
+	public function update_on_key_duplicate($table,$field,$data,$id,$pk_field)
+        {
+            
+            
+      
+        
+            
+          
+            
+            $this->db->query("INSERT INTO $table ($pk_field,$field) VALUES ($id,'$data') ON DUPLICATE KEY UPDATE $field='$data';");
+            
+           // $this->db->where('id', $id);
+           // $this->db->update('scholarship_attached_requirement', array("picture22"=>$data));
+            
+            
+         // echo var_dump($this->db->error());
             
             if($this->db->affected_rows() > 0)
 		{
@@ -135,7 +166,7 @@ class Onlineapplication_model extends CI_Model
 		$now_timestamp = $now->format('Y-m-d H:i:s');
 		$current_year = $now->format('Y');
 		$current_month = $now->format('m');
-                
+                $error = array();
                 
                    $path_year   = './uploads/requirements/'.$current_year.'/'.$current_month."/";
             
@@ -150,124 +181,225 @@ class Onlineapplication_model extends CI_Model
                 
              $this->load->library('upload', $config);
              
-       
-            $config['file_name'] = '2x2picture'. md5($now->format('Y-m-d H:i:s')). $id ;
+       //2 b2 picture
+            $config['file_name'] = $id.'_2x2_picture_'. date_timestamp_get($now) ;
             $this->upload->initialize($config);
             $elementname='photograph';
-              if ( ! $this->upload->do_upload($elementname)){
+            if ( ! $this->upload->do_upload($elementname)){
                   $error[]= array(
-                      'name'=> $elementname,
-                      'error'=> $this->upload->display_errors(),
-                      'path'=>null);
-              }else{
+                  'name'=> $elementname,
+                  'error'=> $this->upload->display_errors(),
+                  'path'=>null);
+            }else{
                   $result[]= array(
-                      'name'=> $elementname,
-                      'error'=> false, 
-                      'path'=>$path_year.$config['file_name']);
-             
-                  
-
-
-                   $data["picture22"] = $path_year.$this->upload->data('file_name');
+                  'name'=> $elementname,
+                  'error'=> false, 
+                  'path'=>$path_year.$config['file_name']);
+            $data["picture22"] = $path_year.$this->upload->data('file_name');
                      
+                   
+                 }
+       //2 b2 picture          
+                 
+       //birth certificate          
+       $config['file_name'] = $id.'_birth_certificate_'. date_timestamp_get($now) ;
+       $this->upload->initialize($config);
+       $elementname='birthcertificate';
+       if ( ! $this->upload->do_upload($elementname)){
+       $error[]= array(
+       'name'=> $elementname,
+       'error'=> $this->upload->display_errors(),
+       'path'=>null);
+       }else{
+       $result[]= array(
+       'name'=> $elementname,
+       'error'=> false, 
+       'path'=>$path_year.$config['file_name']);
+       $data["birth_certificate"] = $path_year.$this->upload->data('file_name');
+       }
+       //birth certificate          
+       
+       
+       //income requirement
+       $config['file_name'] = $id.'_income_requirement_'. date_timestamp_get($now);
+       $this->upload->initialize($config);
+       $elementname='income_req';
+       if ( ! $this->upload->do_upload($elementname)){
+       $error[]= array(
+       'name'=> $elementname,
+       'error'=> $this->upload->display_errors(),
+       'path'=>null);
+       }else{
+       $result[]= array(
+       'name'=> $elementname,
+       'error'=> false, 
+       'path'=>$path_year.$config['file_name']);
+       $data["income_requirement"] = $path_year.$this->upload->data('file_name');
+       }
+       //income requirement                               
+          
+       
+       if($this->input->post('app_pwd')=="Yes"){
+       $config['file_name'] = $id.'_pwd_id_'. date_timestamp_get($now)  ;
+       $this->upload->initialize($config);
+       $elementname='PWD_id';
+       if ( ! $this->upload->do_upload($elementname)){
+       $error[]= array(
+       'name'=> $elementname,
+       'error'=> $this->upload->display_errors(),
+       'path'=>null);
+       }else{
+       $result[]= array(
+       'name'=> $elementname,
+       'error'=> false, 
+       'path'=>$path_year.$config['file_name']);
+       $data["pwd_id"] = $path_year.$this->upload->data('file_name');
+       }
+       } else{
+        $data["pwd_id"] = null;
+        }
               
               
-              }
               
-              
-            $config['file_name'] = 'BirthCertificate'. md5($now->format('Y-m-d H:i:s')).'-'. $id ;
+        //start of academic
+        
+        if($this->input->post('stacked-radio-left')=="incoming1styear"){
+            //perform front copy G12
+            $config['file_name'] = $id.'_g12_academic_requirement_front_'. date_timestamp_get($now) ;
             $this->upload->initialize($config);
-            $elementname='birthcertificate';
-              if ( ! $this->upload->do_upload($elementname)){
-                  $error[]= array(
-                      'name'=> $elementname,
-                      'error'=> $this->upload->display_errors(),
-                      'path'=>null);
-              }else{
-                  $result[]= array(
-                      'name'=> $elementname,
-                      'error'=> false, 
-                      'path'=>$path_year.$config['file_name']);
+            $elementname='acad_requirement_g12_front';
+            if ( ! $this->upload->do_upload($elementname)){
+            $error[]= array(
+            'name'=> $elementname,
+            'error'=> $this->upload->display_errors(),
+            'path'=>null);
+            }else{
+            $result[]= array(
+            'name'=> $elementname,
+            'error'=> false, 
+            'path'=>$path_year.$config['file_name']);
+            $data["academic_requirement_g12_front"] = $path_year.$this->upload->data('file_name');
+            }           
+            // perform the back page  G12
+            $config['file_name'] = $id.'_g12_academic_requirement_back_'. date_timestamp_get($now) ;
+            $this->upload->initialize($config);
+            $elementname='acad_requirement_g12_back';
+            if ( ! $this->upload->do_upload($elementname)){
+            $error[]= array(
+            'name'=> $elementname,
+            'error'=> $this->upload->display_errors(),
+            'path'=>null);
+            }else{
+            $result[]= array(
+            'name'=> $elementname,
+            'error'=> false, 
+            'path'=>$path_year.$config['file_name']);
+            $data["academic_requirement_g12_back"] = $path_year.$this->upload->data('file_name');
+            }
+            
+            
+            
+            
+            // perform grade 11 here
+                                                                                            
+            if($this->input->post("isgrad")=="no"){
+            // Perform grade 11 
+                                                                                                    
+            //perform front copy
+            $config['file_name'] = $id.'_g11_academic_requirement_front_'. date_timestamp_get($now) ;
+            $this->upload->initialize($config);
+            $elementname='acad_requirement_g11_front';
+            if ( ! $this->upload->do_upload($elementname)){
+            $error[]= array(
+            'name'=> $elementname,
+            'error'=> $this->upload->display_errors(),
+            'path'=>null);
+            }else{
+            $result[]= array(
+            'name'=> $elementname,
+            'error'=> false, 
+            'path'=>$path_year.$config['file_name']);
+            $data["academic_requirement_g11_front"] = $path_year.$this->upload->data('file_name');
+            }
+            // perform the back page statement here
+            $config['file_name'] = $id.'_g11_academic_requirement_back_'. date_timestamp_get($now) ;
+            $this->upload->initialize($config);
+            $elementname='acad_requirement_g11_back';
+            if ( ! $this->upload->do_upload($elementname)){
+            $error[]= array(
+            'name'=> $elementname,
+            'error'=> $this->upload->display_errors(),
+            'path'=>null);
+            }else{
+            $result[]= array(
+            'name'=> $elementname,
+            'error'=> false, 
+            'path'=>$path_year.$config['file_name']);
+            $data["academic_requirement_g11_back"] = $path_year.$this->upload->data('file_name');
+            }
+            // end  grade 11 
+
+            }
                   
 
-                     $data["birth_certificate"] = $path_year.$this->upload->data('file_name');
-              }
-              
-              
-            $config['file_name'] = 'PWD_ID'. md5($now->format('Y-m-d H:i:s')).'-'. $id  ;
-            $this->upload->initialize($config);
-            $elementname='PWD_id';
-              if ( ! $this->upload->do_upload($elementname)){
-                  $error[]= array(
-                      'name'=> $elementname,
-                      'error'=> $this->upload->display_errors(),
-                      'path'=>null);
-              }else{
-                  $result[]= array(
-                      'name'=> $elementname,
-                      'error'=> false, 
-                      'path'=>$path_year.$config['file_name']);
+            }
+        else if($this->input->post('stacked-radio-left')=="others"){
+        $config['file_name'] = $id.'_other_academic_requirement_'. date_timestamp_get($now) ;
+        $this->upload->initialize($config);
+        $elementname='acad_requirement_others';
+        if ( ! $this->upload->do_upload($elementname)){
+        $error[]= array(
+        'name'=> $elementname,
+        'error'=> $this->upload->display_errors(),
+        'path'=>null);
+        }else{
+        $result[]= array(
+        'name'=> $elementname,
+        'error'=> false, 
+        'path'=>$path_year.$config['file_name']);
+        $data["acad_requirement_others"] = $path_year.$this->upload->data('file_name');
+            }   
+        }
+                                        
+                                            
+                                            //end of academic
                 
-
-                   $data["pwd_id"] = $path_year.$this->upload->data('file_name');
-              }
+              
+            
               
               
-            $config['file_name'] = 'AcademicRequirement'. md5($now->format('Y-m-d H:i:s')).'-'.$id ;
-            $this->upload->initialize($config);
-            $elementname='acad_requirement';
-              if ( ! $this->upload->do_upload($elementname)){
-                  $error[]= array(
-                      'name'=> $elementname,
-                      'error'=> $this->upload->display_errors(),
-                      'path'=>null);
-              }else{
-                  $result[]= array(
-                      'name'=> $elementname,
-                      'error'=> false, 
-                      'path'=>$path_year.$config['file_name']);
-                
-
-                     $data["academic_requirement"] = $path_year.$this->upload->data('file_name');
-              }
-            $config['file_name'] = 'IncomeRequirement'. md5($now->format('Y-m-d H:i:s')).'-'.$id ;
-            $this->upload->initialize($config);
-            $elementname='income_req';
-              if ( ! $this->upload->do_upload($elementname)){
-                  $error[]= array(
-                      'name'=> $elementname,
-                      'error'=> $this->upload->display_errors(),
-                      'path'=>null);
-              }else{
-                  $result[]= array(
-                      'name'=> $elementname,
-                      'error'=> false, 
-                      'path'=>$path_year.$config['file_name']);
-                 
-
-       $data["income_requirement"] = $path_year.$this->upload->data('file_name');
-              }
               
+          $data["signature"] = $this->input->post('signaturecode');
               
               $data["id"] = $id;
-           
-              if(!$error){
-              $this->db->insert('scholarship_attached_requirement', $data); 
+              
+             // echo var_dump($data);
+            
+          // if(!$this->search_array(null,'path', $error)){
+           //  echo "upload error".var_dump($error);
+           // echo "data result".var_dump($data);
+           // echo "result ".var_dump($result);
+                 
+            $this->db->insert('scholarship_attached_requirement', $data); 
 		
-	if($this->db->affected_rows() > 0)
-		{
-            return true;
-        }
-        else{
-            return $this->db->_error_message();
-        }
-        
-        }
-        else{
+            
+            //echo "db error".var_dump($this->db->error());
+            
+          
             
             
-            return $error;
-        }
+            if($this->db->affected_rows() > 0)
+            {
+               return true;
+               
+            }
+            else{
+               
+               
+                return false;
+            }
+
+      
         
         
           
@@ -275,7 +407,14 @@ class Onlineapplication_model extends CI_Model
           
               
 	}
-	
+	function search_array($find,$fieldname,$array) {
+            foreach ($array as $key => $val) {
+                if ($val[$fieldname] === $find) {
+                    return $key;
+                }
+            }
+            return null;
+         }
 	public function saveapplication($formsubmitted)
 	{
 		
@@ -380,7 +519,9 @@ class Onlineapplication_model extends CI_Model
 		//return $data;
 		
 		$this->db->insert('scholarship_applicant', $data); 
-		
+                
+
+            
 		if($this->db->affected_rows() > 0)
 		{
 			// Code here after successful insert

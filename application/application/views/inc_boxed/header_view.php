@@ -33,10 +33,13 @@ header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 	<!-- /global stylesheets -->
 
 	<!-- Core JS files -->
-	<script src="<?=base_url()?>public/global_assets/js/main/jquery.min.js"></script>
+    
+        <script src="<?=base_url()?>public/global_assets/js/main/jquery.min.js"></script>
 	<script src="<?=base_url()?>public/global_assets/js/main/bootstrap.bundle.min.js"></script>
 	<script src="<?=base_url()?>public/global_assets/js/plugins/loaders/blockui.min.js"></script>
 	<script src="<?=base_url()?>public/global_assets/js/plugins/ui/ripple.min.js"></script>
+	<script src="<?=base_url()?>public/js/forsignature/jq-signature.min.js" ></script>
+	
 	<!-- /core JS files -->
 
 	<!-- Theme JS files -->
@@ -51,7 +54,7 @@ header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 	<!-- <script src="<?=base_url()?>public/global_assets/js/demo_pages/form_validation.js"></script> -->
 	<script src="<?=base_url()?>public/global_assets/js/plugins/extensions/cookie.js"></script>
 
- <script src="<?=base_url()?>public/global_assets/js/demo_pages/form_wizard.js"></script>
+        <script src="<?=base_url()?>public/global_assets/js/demo_pages/form_wizard.js"></script>
 
 	<script src="<?=base_url()?>public/global_assets/js/demo_pages/form_validation.js"></script>
 	
