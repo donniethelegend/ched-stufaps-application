@@ -55,8 +55,90 @@
     <script>
 $(document).ready(function(){
 
-    
-   
+    $('.submitupdate').on('submit',function(e){
+        
+        e.preventDefault();
+         
+                 var formdata= $(this)[0];
+                 var action= $(this).attr('action');
+          console.log(new FormData(formdata))
+        
+        $.ajax({
+                    method: "POST",
+                    url: action,
+                    data: new FormData(formdata),
+                    cache: false,
+                
+                    contentType: false,
+                    processData: false,
+                    
+        xhr: function() {
+            var myXhr = $.ajaxSettings.xhr();
+            console.log(myXhr)
+            if (myXhr.upload) {
+              
+                myXhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        
+                console.log(Uploading "+parseInt(((e.loaded/e.total)*100))+"%");
+                     //$('.progress-bar').html("Uploading "+parseInt(((e.loaded/e.total)*100))+"%");
+                        
+                     //$('.progress-bar').css("width",parseInt(((e.loaded/e.total)*100))+"%");
+                    //$('.progress-bar').attr({
+                      //  "aria-valueno": e.loaded,
+                       // "aria-valuemax": e.total
+                             
+                     // });
+                  
+                  
+                  
+                  
+                  
+                    }
+                } , false);
+            }
+            return myXhr;
+        },
+                    beforeSend: function(xhr){  
+                 
+  
+         
+               //   var btn =form.find('[type=submit]').prop('disabled',true);
+                 //          btn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Loading...') 
+                  
+                  
+                    }
+                    
+                    
+                  })
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    })
+   $('[name="filetoupdate"]').change(function(){
+       
+  $(this).parents('form').submit();
+      
+      
+      
+      
+      
+      
+      
+   })
     
     
     
@@ -208,7 +290,7 @@ $(document).ready(function(){
                                                                                                             <div class="row">
                                                                                                             
                                                                                                               
-                                                                                                        <input required type="file"  name="filetoupdate" id="filetoup1"/>
+                                                                                                        <input required type="file"  name="filetoupdate" />
                                                                                                         
                                                                                                      
                                                                                                              

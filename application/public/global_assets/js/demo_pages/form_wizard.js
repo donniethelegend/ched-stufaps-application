@@ -163,6 +163,7 @@ var FormWizard = function() {
             },
             onFinishing: function (event, currentIndex) {
                 form.validate().settings.ignore = ':disabled';
+            
                 return form.valid();
             },
             onFinished: function (event, currentIndex) {
