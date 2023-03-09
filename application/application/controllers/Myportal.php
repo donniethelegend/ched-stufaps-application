@@ -116,6 +116,54 @@ class Myportal  extends CI_Controller{
              }
             
         }
+        public function uploadupdate(){
+            
+        $now = new DateTime();
+		$now->setTimezone(new DateTimezone('Asia/Manila'));
+		$now_timestamp = $now->format('Y-m-d H:i:s');
+		$current_year = $now->format('Y');
+		$current_month = $now->format('m');
+                 $id  = $_SESSION['applicantid'];
+                $field = $this->input->get('field');
+                   $path_year   = './uploads/requirements/'.$current_year.'/'.$current_month."/";
+            
+                   if(!is_dir($path_year)){                                      
+                    mkdir($path_year, 0777, true);
+                }
+                 $data = array();
+               
+                 $config['allowed_types'] = 'gif|jpg|png|pdf';
+                 $config['upload_path'] = $path_year;
+                 $config['file_name'] = $id.'_'.$field.'_'. date_timestamp_get($now) ;
+                 $this->load->library('upload',$config);
+                   
+                 if($this->upload->do_upload('filetoupdate')){
+                       
+                 $data =$path_year.$this->upload->data('file_name');
+                 
+                     $id = $_SESSION['applicantid'];
+                     
+                     if($this->onlineapplication_model->update_on_key_duplicate("scholarship_attached_requirement",$field,$data,$id,'id')){
+               
+                 
+               echo $data;
+                          // header('location:'.base_url().'myportal');
+                         // redirect(base_url().'myportal');
+                          }
+                          else{
+               //  redirect(base_url());
+                                      echo "failed" ;
+
+                          }
+                 }
+                 else{
+                     
+                     echo var_dump($this->upload->display_errors());
+                 }
+                 
+                 
+            
+        }
         public function updateprofilepic(){
             
         $now = new DateTime();
@@ -134,6 +182,7 @@ class Myportal  extends CI_Controller{
                
                  $config['allowed_types'] = 'gif|jpg|png|pdf';
                  $config['upload_path'] = $path_year;
+                 $config['file_name'] = $id.'_2x2_picture_'. date_timestamp_get($now) ;
                  $this->load->library('upload',$config);
                    
                  if($this->upload->do_upload('profilepic')){

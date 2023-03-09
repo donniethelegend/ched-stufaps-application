@@ -58,12 +58,12 @@ $(document).ready(function(){
     $('.submitupdate').on('submit',function(e){
         
         e.preventDefault();
-         
+         var form = $(this);
                  var formdata= $(this)[0];
                  var action= $(this).attr('action');
           console.log(new FormData(formdata))
         
-        $.ajax({
+      var request =   $.ajax({
                     method: "POST",
                     url: action,
                     data: new FormData(formdata),
@@ -80,15 +80,18 @@ $(document).ready(function(){
                 myXhr.upload.addEventListener('progress', function(e) {
                     if (e.lengthComputable) {
                         
-                console.log(Uploading "+parseInt(((e.loaded/e.total)*100))+"%");
-                     //$('.progress-bar').html("Uploading "+parseInt(((e.loaded/e.total)*100))+"%");
+                console.log("Uploading "+parseInt(((e.loaded/e.total)*100))+"%");
+                
+             //   ="0%" ="0" style="width: 0%;"
+                
+                    // $('.pace_progress').html("Uploading "+parseInt(((e.loaded/e.total)*100))+"%");
                         
-                     //$('.progress-bar').css("width",parseInt(((e.loaded/e.total)*100))+"%");
-                    //$('.progress-bar').attr({
-                      //  "aria-valueno": e.loaded,
-                       // "aria-valuemax": e.total
+                    $('.pace_progress').css("width",parseInt(((e.loaded/e.total)*100))+"%");
+                    $('.progress-bar').attr({
+                        "data-progress": e.loaded,
+                        "data-progress-text": e.total
                              
-                     // });
+                      });
                   
                   
                   
@@ -116,7 +119,14 @@ $(document).ready(function(){
         
         
         
-        
+          request.done(function(xhr){
+          console.log(xhr)
+                   form.find('.myprogress').hide();
+                   form.parent('td').html('<a target="_blank" download href="'+xhr+'" class="btn btn-xs"><span class="icon-file-download2"></span> </a>')
+           console.log('done and success make a statement here')
+                  });
+
+
         
         
         
@@ -129,6 +139,9 @@ $(document).ready(function(){
         
     })
    $('[name="filetoupdate"]').change(function(){
+       
+       $(this).parents('form').find('.myprogress').removeClass('d-none').show()
+       $(this).hide();
        
   $(this).parents('form').submit();
       
@@ -291,7 +304,11 @@ $(document).ready(function(){
                                                                                                             
                                                                                                               
                                                                                                         <input required type="file"  name="filetoupdate" />
-                                                                                                        
+                                                                                                        <div class="pace-demo p-3 w-auto h-auto d-none myprogress">
+                                                                                                        <div class="theme_bar_sm">
+                                                                                                                <div class="pace_progress" data-progress-text="0%" data-progress="0" style="width: 0%;"></div>
+                                                                                                        </div>
+                                                                                                </div>
                                                                                                      
                                                                                                              
                                                                                                         </div>
